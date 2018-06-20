@@ -10,7 +10,9 @@ Elm Dice Roller - Originally a basic dice roller, slowly turning into a tabletop
 
 No work has been done outside hackdays - everything is shown as is, with no guarantee that the projects work as intended. All code belongs to Flux under the following license:
 
-MIT License
+---
+
+## MIT License
 
 Copyright (c) 2018 Flux Federation
 
