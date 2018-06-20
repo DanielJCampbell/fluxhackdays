@@ -1,0 +1,74 @@
+<!--
+MIT License
+
+Copyright (c) 2018 Flux Federation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
+<html>
+  <head>
+    <script src = "rasterize.js"></script>
+    <script src = "gl-matrix-min.js"></script>
+    <script src = "webgl.js"></script>
+
+    <script id = "vs" type = "shader-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec3 aVertexNormal;
+
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      uniform mat3 uNMatrix;
+
+      varying vec3 light;
+
+      void main(void) {
+        vec3 newNormal = uNMatrix * aVertexNormal;
+        float dotProd = dot(newNormal, vec3(0.0, -0.7, 0.7));
+        light = vec3(0.5, 0.5, 0.5);
+
+        if (dotProd > 0.0) {
+          light *= dotProd;
+        } else {
+          light *= 0.0;
+        }
+
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+      }
+    </script>
+
+    <script id = "fs" type = "shader-fragment">
+      precision mediump float;
+
+      varying vec3 light;
+
+      void main(void) {
+        vec3 ambient = vec3(0.2, 0.2, 0.2);
+        gl_FragColor = vec4(ambient + light, 1.0);
+      }
+    </script>
+  </head>
+
+  <body onload = "webGLStart(rasterizeSphere);")>
+    <p> Width: </p>
+    <input type = "range" step = "1" max = "60" min = "1" value = "1" oninput = "globals.width = this.value;" />
+    <br>
+    <canvas id = "canvas" width = "600" height = "600" />
+  </body>
+</html>
